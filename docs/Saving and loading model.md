@@ -5,8 +5,8 @@ When you have lots of data and training takes a lot of time option with saving a
 ### Fit model
 
 ```python
-from lifetimes import BetaGeoFitter
-from lifetimes.datasets import load_cdnow_summary
+from lifetimes_custom import BetaGeoFitter
+from lifetimes_custom.datasets import load_cdnow_summary
 
 data = load_cdnow_summary(index_col=[0])
 bgf = BetaGeoFitter()

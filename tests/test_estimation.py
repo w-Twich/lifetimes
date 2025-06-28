@@ -8,9 +8,9 @@ import pytest
 import os
 from collections import OrderedDict
 
-import lifetimes as lt
-import lifetimes.utils as utils
-from lifetimes.datasets import (
+import lifetimes_custom as lt
+import lifetimes_custom.utils as utils
+from lifetimes_custom.datasets import (
     load_cdnow_summary,
     load_cdnow_summary_data_with_monetary_value,
     load_donations,

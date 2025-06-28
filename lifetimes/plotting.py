@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
-from lifetimes.utils import calculate_alive_path, expected_cumulative_transactions
+from lifetimes_custom.utils import calculate_alive_path, expected_cumulative_transactions
 from scipy import stats
 
 __all__ = [

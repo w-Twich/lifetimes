@@ -15,7 +15,7 @@ long_description = io.open(readme_path, encoding="utf8").read()
 
 
 setup(
-    name="Lifetimes",
+    name="Lifetimes_Custom",
     version=__version__,
     description="Measure customer lifetime value in Python",
     author="Cam Davidson-Pilon",

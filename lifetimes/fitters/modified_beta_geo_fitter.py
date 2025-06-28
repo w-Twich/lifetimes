@@ -8,8 +8,8 @@ from autograd.numpy import log, logaddexp
 from autograd.scipy.special import gammaln, beta, gamma
 from scipy.special import hyp2f1
 
-from lifetimes import BetaGeoFitter
-from lifetimes.generate_data import modified_beta_geometric_nbd_model
+from lifetimes_custom import BetaGeoFitter
+from lifetimes_custom.generate_data import modified_beta_geometric_nbd_model
 
 
 class ModifiedBetaGeoFitter(BetaGeoFitter):

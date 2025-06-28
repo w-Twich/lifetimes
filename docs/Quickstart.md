@@ -3,7 +3,7 @@
 For the following examples, we'll use a dataset from an ecommerce provider to analyze their customers' repeat purchases. The examples below are using the `cdnow_customers.csv` located in the `datasets/` directory.
 
 ```python
-from lifetimes.datasets import load_cdnow_summary
+from lifetimes_custom.datasets import load_cdnow_summary
 data = load_cdnow_summary(index_col=[0])
 
 print(data.head())
@@ -33,7 +33,7 @@ If your data is not in the format (very common), there are [utility functions](#
 We'll use the **BG/NBD model** first. There are other models which we will explore in these docs, but this is the simplest to start with.
 
 ```python
-from lifetimes import BetaGeoFitter
+from lifetimes_custom import BetaGeoFitter
 
 # similar API to scikit-learn and lifelines.
 bgf = BetaGeoFitter(penalizer_coef=0.0)
@@ -62,7 +62,7 @@ For small samples sizes, the parameters can get implausibly large, so by adding 
 Consider: a customer bought from you every day for three weeks straight, and we haven't heard from them in months. What are the chances they are still "alive"? Pretty small. On the other hand, a customer who historically buys from you once a quarter, and bought last quarter, is likely still alive. We can visualize this relationship using the **Frequency/Recency matrix**, which computes the expected number of transactions an artificial customer is to make in the next time period, given his or her recency (age at last purchase) and frequency (the number of repeat transactions he or she has made).
 
 ```
-from lifetimes.plotting import plot_frequency_recency_matrix
+from lifetimes_custom.plotting import plot_frequency_recency_matrix
 
 plot_frequency_recency_matrix(bgf)
 ```
@@ -77,7 +77,7 @@ There's also that beautiful "tail" around (5,25). That represents the customer w
 Another interesting matrix to look at is the probability of still being *alive*:
 
 ```python
-from lifetimes.plotting import plot_probability_alive_matrix
+from lifetimes_custom.plotting import plot_probability_alive_matrix
 
 plot_probability_alive_matrix(bgf)
 ```
@@ -110,7 +110,7 @@ Great, we can see that the customer who has made 26 purchases, and bought very r
 Ok, we can predict and we can visualize our customers' behaviour, but is our model correct? There are a few ways to assess the model's correctness. The first is to compare your data versus artificial data simulated with your fitted model's parameters.
 
 ```python
-from lifetimes.plotting import plot_period_transactions
+from lifetimes_custom.plotting import plot_period_transactions
 plot_period_transactions(bgf)
 ```
 
@@ -123,8 +123,8 @@ We can see that our actual data and our simulated data line up well. This proves
 Most often, the dataset you have at hand will be at the transaction level. Lifetimes has some utility functions to transform that transactional data (one row per purchase) into summary data (a frequency, recency and age dataset).
 
 ```python
-from lifetimes.datasets import load_transaction_data
-from lifetimes.utils import summary_data_from_transaction_data
+from lifetimes_custom.datasets import load_transaction_data
+from lifetimes_custom.utils import summary_data_from_transaction_data
 
 transaction_data = load_transaction_data()
 print(transaction_data.head())
@@ -159,7 +159,7 @@ bgf.fit(summary['frequency'], summary['recency'], summary['T'])
 With transactional data, we can partition the dataset into a calibration period dataset and a holdout dataset. This is important as we want to test how our model performs on data not yet seen (think cross-validation in standard machine learning literature). Lifetimes has a function to partition our dataset like this:
 
 ```python
-from lifetimes.utils import calibration_and_holdout_data
+from lifetimes_custom.utils import calibration_and_holdout_data
 
 summary_cal_holdout = calibration_and_holdout_data(transaction_data, 'id', 'date',
                                         calibration_period_end='2014-09-01',
@@ -179,7 +179,7 @@ id
 With this dataset, we can perform fitting on the `_cal` columns, and test on the `_holdout` columns:
 
 ```python
-from lifetimes.plotting import plot_calibration_purchases_vs_holdout_purchases
+from lifetimes_custom.plotting import plot_calibration_purchases_vs_holdout_purchases
 
 bgf.fit(summary_cal_holdout['frequency_cal'], summary_cal_holdout['recency_cal'], summary_cal_holdout['T_cal'])
 plot_calibration_purchases_vs_holdout_purchases(bgf, summary_cal_holdout)
@@ -205,7 +205,7 @@ Given a customer transaction history, we can calculate their historical probabil
 our trained model. For example:
 
 ```python
-from lifetimes.plotting import plot_history_alive
+from lifetimes_custom.plotting import plot_history_alive
 
 id = 35
 days_since_birth = 200
@@ -222,7 +222,7 @@ transactions' occurrences. To estimate this we can use the Gamma-Gamma submodel.
 from transactional data also containing economic values for each transaction (i.e. profits or revenues).
 
 ```python
-from lifetimes.datasets import load_cdnow_summary_data_with_monetary_value
+from lifetimes_custom.datasets import load_cdnow_summary_data_with_monetary_value
 
 summary_with_money_value = load_cdnow_summary_data_with_monetary_value()
 summary_with_money_value.head()
@@ -261,7 +261,7 @@ frequency             0.113884   1.000000
 At this point we can train our Gamma-Gamma submodel and predict the conditional, expected average lifetime value of our customers.
 
 ```python
-from lifetimes import GammaGammaFitter
+from lifetimes_custom import GammaGammaFitter
 
 ggf = GammaGammaFitter(penalizer_coef = 0)
 ggf.fit(returning_customers_summary['frequency'],

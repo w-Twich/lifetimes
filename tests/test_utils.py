@@ -6,8 +6,8 @@ import numpy as np
 from pandas.util.testing import assert_frame_equal
 from numpy.testing import assert_almost_equal, assert_allclose
 
-from lifetimes import utils, BetaGeoFitter, ParetoNBDFitter
-from lifetimes.datasets import load_dataset
+from lifetimes_custom import utils, BetaGeoFitter, ParetoNBDFitter
+from lifetimes_custom.datasets import load_dataset
 
 
 @pytest.fixture()

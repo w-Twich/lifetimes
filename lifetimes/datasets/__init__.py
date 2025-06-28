@@ -15,7 +15,7 @@ __all__ = [
 
 def load_dataset(filename, **kwargs):
     """
-    Load a dataset from lifetimes.datasets.
+    Load a dataset from lifetimes_custom.datasets.
 
     Parameters
     ----------
