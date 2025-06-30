@@ -69,3 +69,7 @@ target/
 
 # Benchmarks Images
 benchmarks/images
+
+# Dev Specific Files
+testing.ipynb
+daily_summary.csv

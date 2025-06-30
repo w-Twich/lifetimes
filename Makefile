@@ -15,7 +15,7 @@ lint:
 ifeq ($(TRAVIS_PYTHON_VERSION), 2.7)
 		echo "Skip linting for Python2.7"
 else
-		black lifetimes/ -l 120 --fast
+		black lifetimes_custom/ -l 120 --fast
 		black tests/ -l 120 --fast
 		prospector --output-format grouped
 endif

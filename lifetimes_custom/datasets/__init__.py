@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# modified from https://github.com/CamDavidsonPilon/lifelines/
+# modified from https://github.com/CamDavidsonPilon/lifetimes/
 
 import pandas as pd
 from .. import utils
@@ -31,7 +31,7 @@ def load_dataset(filename, **kwargs):
     DataFrame
 
     """
-    return pd.read_csv(resource_filename("lifetimes", "datasets/" + filename), **kwargs)
+    return pd.read_csv(resource_filename("lifetimes_custom", "datasets/" + filename), **kwargs)
 
 
 def load_donations(**kwargs):

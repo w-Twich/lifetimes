@@ -148,6 +148,11 @@ class GammaGammaFitter(BaseFitter):
             monetary_value = self.data["monetary_value"]
         if frequency is None:
             frequency = self.data["frequency"]
+        
+        # Handle NaN values in frequency and monetary_value
+        frequency = np.nan_to_num(frequency, nan=0)
+        monetary_value = np.nan_to_num(monetary_value, nan=0)
+
         p, q, v = self._unload_params("p", "q", "v")
 
         # The expected average profit is a weighted average of individual
@@ -228,7 +233,7 @@ class GammaGammaFitter(BaseFitter):
             verbose,
             tol=tol,
             bounds=((None, None), (0, None), (None, None)) if q_constraint else None,
-            **kwargs
+            options=kwargs  # Updated to use options dictionary
         )
 
         self.data = DataFrame(

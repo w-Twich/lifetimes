@@ -210,10 +210,12 @@ class ParetoNBDFitter(BaseFitter):
 
         r_s_x = r + s + x
 
-        A_1 = gammaln(r + x) - gammaln(r) + r * log(alpha) + s * log(beta)
-        log_A_0 = ParetoNBDFitter._log_A_0(params, x, rec, T)
+        # Handle underflow by replacing invalid values with zeros
+        A_1 = np.nan_to_num(gammaln(r + x) - gammaln(r) + r * log(alpha) + s * log(beta), nan=0)
+        log_A_0 = np.nan_to_num(ParetoNBDFitter._log_A_0(params, x, rec, T), nan=0)
 
-        A_2 = logaddexp(-(r + x) * log(alpha + T) - s * log(beta + T), log(s) + log_A_0 - log(r_s_x))
+        A_2_raw = logaddexp(-(r + x) * log(alpha + T) - s * log(beta + T), log(s) + log_A_0 - log(r_s_x))
+        A_2 = np.nan_to_num(A_2_raw, nan=0)
 
         return A_1 + A_2
 
@@ -277,11 +279,12 @@ class ParetoNBDFitter(BaseFitter):
         r, alpha, s, beta = params
 
         likelihood = self._conditional_log_likelihood(params, x, t_x, T)
-        first_term = (
-            gammaln(r + x) - gammaln(r) + r * log(alpha) + s * log(beta) - (r + x) * log(alpha + T) - s * log(beta + T)
+        first_term = np.nan_to_num(
+            gammaln(r + x) - gammaln(r) + r * log(alpha) + s * log(beta) - (r + x) * log(alpha + T) - s * log(beta + T),
+            nan=0
         )
-        second_term = log(r + x) + log(beta + T) - log(alpha + T)
-        third_term = log((1 - ((beta + T) / (beta + T + t)) ** (s - 1)) / (s - 1))
+        second_term = np.nan_to_num(log(r + x) + log(beta + T) - log(alpha + T), nan=0)
+        third_term = np.nan_to_num(log((1 - ((beta + T) / (beta + T + t)) ** (s - 1)) / (s - 1)), nan=0)
 
         return exp(first_term + second_term + third_term - likelihood)
 

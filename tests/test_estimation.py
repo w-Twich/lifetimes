@@ -29,12 +29,12 @@ def cdnow_customers():
 class TestBaseFitter:
     def test_repr(self):
         base_fitter = lt.BaseFitter()
-        assert repr(base_fitter) == "<lifetimes.BaseFitter>"
+        assert repr(base_fitter) == "<lifetimes_custom.BaseFitter>"
         base_fitter.params_ = pd.Series(dict(x=12.3, y=42))
         base_fitter.data = np.array([1, 2, 3])
-        assert repr(base_fitter) == "<lifetimes.BaseFitter: fitted with 3 subjects, x: 12.30, y: 42.00>"
+        assert repr(base_fitter) == "<lifetimes_custom.BaseFitter: fitted with 3 subjects, x: 12.30, y: 42.00>"
         base_fitter.data = None
-        assert repr(base_fitter) == "<lifetimes.BaseFitter: x: 12.30, y: 42.00>"
+        assert repr(base_fitter) == "<lifetimes_custom.BaseFitter: x: 12.30, y: 42.00>"
 
     def test_unload_params(self):
         base_fitter = lt.BaseFitter()
@@ -137,12 +137,13 @@ class TestBetaGeoBetaBinomFitter:
         exploded_dataset = pd.DataFrame(columns=["frequency", "recency", "periods"])
 
         for _, row in donations.iterrows():
-            exploded_dataset = exploded_dataset.append(
+            exploded_dataset = pd.concat([
+                exploded_dataset,
                 pd.DataFrame(
                     [[row["frequency"], row["recency"], row["periods"]]] * row["weights"],
                     columns=["frequency", "recency", "periods"],
                 )
-            )
+            ], ignore_index=True)
 
         exploded_dataset = exploded_dataset.astype(np.int64)
         exploded_dataset.to_csv("exploded.csv")
@@ -189,7 +190,7 @@ class TestGammaGammaFitter:
             [24.65, 18.91, 35.17, 35.17, 35.17, 71.46, 18.91, 35.17, 27.28, 35.17]
         )  # from Hardie spreadsheet http://brucehardie.com/notes/025/
 
-        npt.assert_allclose(estimates.values, expected, atol=0.1)
+        npt.assert_allclose(estimates, expected, atol=0.1)
 
     def test_customer_lifetime_value_with_bgf(self, cdnow_customers_with_monetary_value):
 

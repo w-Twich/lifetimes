@@ -85,9 +85,9 @@ More Information
 .. |image0| image:: http://i.imgur.com/7s3jqZM.png
 .. |PyPI version| image:: https://badge.fury.io/py/Lifetimes.svg
    :target: https://badge.fury.io/py/Lifetimes
-.. |Documentation Status| image:: https://readthedocs.org/projects/lifetimes/badge/?version=latest
+.. |Documentation Status| image:: https://readthedocs.org/projects/lifetimes_custom/badge/?version=latest
    :target: http://lifetimes.readthedocs.io/en/latest/?badge=latest
 .. |Build Status| image:: https://travis-ci.org/CamDavidsonPilon/lifetimes.svg?branch=master
    :target: https://travis-ci.org/CamDavidsonPilon/lifetimes
-.. |Coverage Status| image:: https://coveralls.io/repos/CamDavidsonPilon/lifetimes/badge.svg?branch=master
+.. |Coverage Status| image:: https://coveralls.io/repos/CamDavidsonPilon/lifetimes_custom/badge.svg?branch=master
    :target: https://coveralls.io/r/CamDavidsonPilon/lifetimes?branch=master

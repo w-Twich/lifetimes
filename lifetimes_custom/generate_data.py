@@ -133,7 +133,12 @@ def beta_geometric_nbd_model_transactional_data(T, r, alpha, a, b, observation_p
             next_purchase_in += random.exponential(scale=1.0 / l)
             alive = random.random() > p
 
-        df = df.append(pd.DataFrame(purchases, columns=columns))
+        new_df = pd.DataFrame(purchases, columns=columns)
+        new_df = new_df.loc[:, ~new_df.isna().all()]  # Exclude all-NA columns
+        new_df = new_df.dropna(how="all")  # Drop rows that are all-NA
+        if new_df.empty:
+            continue  # Skip empty DataFrames
+        df = pd.concat([df, new_df.astype(df.dtypes.to_dict())], ignore_index=True)  # Ensure consistent dtypes
 
     return df.reset_index(drop=True)
 

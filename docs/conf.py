@@ -64,7 +64,7 @@ source_suffix = {".rst": "restructuredtext", ".txt": "markdown", ".md": "markdow
 master_doc = "index"
 
 # General information about the project.
-project = "lifetimes"
+project = "lifetimes_custom"
 copyright = "2015, Cameron Davidson-Pilon"
 author = "Cameron Davidson-Pilon"
 
@@ -133,7 +133,7 @@ napoleon_use_keyword = True
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "lifetimesdoc"
+htmlhelp_basename = "lifetimes_custom_doc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -156,14 +156,14 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [(master_doc, "lifetimes.tex", "lifetimes Documentation", "Cameron Davidson-Pilon", "manual")]
+latex_documents = [(master_doc, "lifetimes_custom.tex", "lifetimes_custom Documentation", "Cameron Davidson-Pilon", "manual")]
 
 
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "lifetimes", "lifetimes Documentation", [author], 1)]
+man_pages = [(master_doc, "lifetimes_custom", "lifetimes_custom Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------

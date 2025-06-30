@@ -305,12 +305,8 @@ def plot_expected_repeat_purchases(
     if ax is None:
         ax = plt.subplot(111)
 
-    if plt.matplotlib.__version__ >= "1.5":
-        color_cycle = ax._get_lines.prop_cycler
-        color = coalesce(kwargs.pop("c", None), kwargs.pop("color", None), next(color_cycle)["color"])
-    else:
-        color_cycle = ax._get_lines.color_cycle
-        color = coalesce(kwargs.pop("c", None), kwargs.pop("color", None), next(color_cycle))
+    color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    color = coalesce(kwargs.pop("c", None), kwargs.pop("color", None), color_cycle[0])
 
     max_T = model.data["T"].max()
 
@@ -322,7 +318,7 @@ def plot_expected_repeat_purchases(
 
     plt.title(title)
     plt.xlabel(xlabel)
-    plt.legend(loc="lower right")
+    plt.legend(loc="lower right", labels=ax.get_legend_handles_labels()[1])  # Ensure legend labels are set
     return ax
 
 

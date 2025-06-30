@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Test lifetimes utils."""
+"""Test lifetimes_custom utils."""
 import pytest
 import pandas as pd
 import numpy as np
-from pandas.util.testing import assert_frame_equal
+from pandas.testing import assert_frame_equal
 from numpy.testing import assert_almost_equal, assert_allclose
 
 from lifetimes_custom import utils, BetaGeoFitter, ParetoNBDFitter
@@ -12,7 +12,7 @@ from lifetimes_custom.datasets import load_dataset
 
 @pytest.fixture()
 def example_transaction_data():
-    return pd.read_csv("lifetimes/datasets/example_transactions.csv", parse_dates=["date"])
+    return pd.read_csv("lifetimes_custom/datasets/example_transactions.csv", parse_dates=["date"])
 
 
 @pytest.fixture()
@@ -332,7 +332,7 @@ def test_summary_date_from_transaction_with_monetary_values(large_transaction_le
 
 
 def test_summary_data_from_transaction_data_will_choose_the_correct_first_order_to_drop_in_monetary_transactions():
-    # this is the correct behaviour. See https://github.com/CamDavidsonPilon/lifetimes/issues/85
+    # this is the correct behaviour. See https://github.com/CamDavidsonPilon/lifetimes_custom/issues/85
     # and test_summary_statistics_are_indentical_to_hardies_paper_confirming_correct_aggregations
     cust = pd.Series([2, 2, 2])
     dates_ordered = pd.to_datetime(pd.Series(["2014-03-14 00:00:00", "2014-04-09 00:00:00", "2014-05-21 00:00:00"]))
@@ -353,7 +353,7 @@ def test_summary_statistics_are_indentical_to_hardies_paper_confirming_correct_a
     # see http://brucehardie.com/papers/rfm_clv_2005-02-16.pdf
     # RFM and CLV: Using Iso-value Curves for Customer Base Analysis
     df = pd.read_csv(
-        "lifetimes/datasets/CDNOW_sample.txt",
+        "lifetimes_custom/datasets/CDNOW_sample.txt",
         sep=r"\s+",
         header=None,
         names=["_id", "id", "date", "cds_bought", "spent"],

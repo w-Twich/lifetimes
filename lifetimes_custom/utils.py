@@ -13,6 +13,7 @@ __all__ = [
     "summary_data_from_transaction_data",
     "calculate_alive_path",
     "expected_cumulative_transactions",
+    "daily_summary_data_from_transaction_data",
 ]
 
 
@@ -327,6 +328,123 @@ def summary_data_from_transaction_data(
     return customers[summary_columns].astype(float)
 
 
+def daily_summary_data_from_transaction_data(
+    transactions,
+    customer_id_col,
+    datetime_col,
+    monetary_value_col=None,
+    datetime_format=None,
+    observation_period_end=None,
+    freq="D",
+    projection_periods=0,
+):
+    """
+    Return daily summary data from transactions.
+
+    This transforms a DataFrame of transaction data of the form:
+        customer_id, datetime [, monetary_value]
+    to a DataFrame of the form:
+        customer_id, date, frequency, recency, T [, monetary_value]
+
+    Parameters
+    ----------
+    transactions: :obj: DataFrame
+        a Pandas DataFrame that contains the customer_id col and the datetime col.
+    customer_id_col: string
+        the column in transactions DataFrame that denotes the customer_id
+    datetime_col:  string
+        the column in transactions that denotes the datetime the purchase was made.
+    monetary_value_col: string, optional
+        the columns in the transactions that denotes the monetary value of the transaction.
+        Optional, only needed for customer lifetime value estimation models.
+    observation_period_end: datetime, optional
+         a string or datetime to denote the final date of the study.
+         Events after this date are truncated. If not given, defaults to the max 'datetime_col'.
+    datetime_format: string, optional
+        a string that represents the timestamp format. Useful if Pandas can't understand
+        the provided format.
+    freq: string, optional
+        Default: 'D' for days. Possible values listed here:
+        https://numpy.org/devdocs/reference/arrays.datetime.html#datetime-units
+    projection_periods: int, optional
+        Default: 0. The number of periods to project into the future.
+
+    Returns
+    -------
+    :obj: DataFrame:
+        customer_id, date, frequency, recency, T [, monetary_value]
+    """
+
+    transactions[datetime_col] = pd.to_datetime(
+        transactions[datetime_col], format=datetime_format
+    )
+
+    if observation_period_end is None:
+        observation_period_end = transactions[datetime_col].max()
+    else:
+        observation_period_end = pd.to_datetime(
+            observation_period_end, format=datetime_format
+        )
+
+    start_date = transactions[datetime_col].min()
+    end_date = observation_period_end + pd.to_timedelta(projection_periods, unit=freq)
+
+    all_customers = transactions[customer_id_col].unique()
+    
+    # Create a DataFrame with all dates for each customer
+    all_dates = pd.date_range(start_date, end_date, freq=freq)
+    customer_date_index = pd.MultiIndex.from_product(
+        [all_customers, all_dates], names=[customer_id_col, "date"]
+    )
+    summary_df = pd.DataFrame(index=customer_date_index).reset_index()
+
+    # Merge with transactions
+    transactions_daily = transactions.copy()
+    transactions_daily["date"] = transactions_daily[datetime_col].dt.to_period(freq).dt.to_timestamp()
+    
+    # Aggregate transactions per day
+    agg_trans = transactions_daily.groupby([customer_id_col, "date"]).agg(
+        transactions_count=("date", lambda x: 1),  # Always count as 1 transaction per day
+        **({monetary_value_col: (monetary_value_col, "sum")} if monetary_value_col else {})
+    ).reset_index()
+
+    summary_df = pd.merge(summary_df, agg_trans, on=[customer_id_col, "date"], how="left")
+    summary_df["transactions_count"].fillna(0, inplace=True)
+    if monetary_value_col:
+        summary_df[monetary_value_col].fillna(0, inplace=True)
+
+    # Get first transaction date for each customer
+    first_transaction_dates = transactions.groupby(customer_id_col)[datetime_col].min().rename("first_transaction_date")
+    summary_df = pd.merge(summary_df, first_transaction_dates, on=customer_id_col, how="left")
+
+    # Filter out dates before the first transaction
+    summary_df = summary_df[summary_df["date"] >= summary_df["first_transaction_date"]]
+
+    # Calculate Frequency
+    summary_df["frequency"] = summary_df.groupby(customer_id_col)["transactions_count"].cumsum() - 1
+    
+    # Calculate T
+    summary_df["T"] = (summary_df["date"] - summary_df["first_transaction_date"]) / np.timedelta64(1, freq)
+
+    # Calculate Recency
+    summary_df["last_transaction_date"] = summary_df.copy().loc[summary_df["transactions_count"] > 0, "date"]
+    summary_df["last_transaction_date"] = summary_df.groupby(customer_id_col)["last_transaction_date"].ffill()
+    summary_df["recency"] = (summary_df["last_transaction_date"] - summary_df["first_transaction_date"]) / np.timedelta64(1, freq)
+    summary_df["recency"].fillna(0, inplace=True)
+
+    if monetary_value_col:
+        summary_df["monetary_value_cumulative"] = summary_df.groupby(customer_id_col)[monetary_value_col].cumsum()
+        summary_df["monetary_value"] = summary_df["monetary_value_cumulative"] / (summary_df["frequency"] + 1)
+        summary_df.drop(columns=["monetary_value_cumulative"], inplace=True)
+
+    # Final column selection and renaming
+    final_cols = [customer_id_col, "date", "frequency", "recency", "T"]
+    if monetary_value_col:
+        final_cols.append("monetary_value")
+        
+    return summary_df[final_cols]
+
+
 def calculate_alive_path(
     model,
     transactions,
@@ -485,6 +603,12 @@ def _customer_lifetime_value(
     :obj: Series
         series with customer ids as index and the estimated customer lifetime values as values
     """
+
+    # Handle NaN values in inputs
+    frequency = np.nan_to_num(frequency, nan=0)
+    recency = np.nan_to_num(recency, nan=0)
+    T = np.nan_to_num(T, nan=0)
+    monetary_value = np.nan_to_num(monetary_value, nan=0)
 
     df = pd.DataFrame(index=range(len(frequency)))
     df["clv"] = 0  # initialize the clv column to zeros

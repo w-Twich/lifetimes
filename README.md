@@ -11,9 +11,9 @@
 #### Measuring users is hard. Lifetimes makes it easy.
 [![Inactively Maintained](https://img.shields.io/badge/Maintenance%20Level-Inactively%20Maintained-yellowgreen.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
 [![PyPI version](https://badge.fury.io/py/Lifetimes.svg)](https://badge.fury.io/py/Lifetimes)
-[![Documentation Status](https://readthedocs.org/projects/lifetimes/badge/?version=latest)](http://lifetimes.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/lifetimes_custom/badge/?version=latest)](http://lifetimes.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://travis-ci.org/CamDavidsonPilon/lifetimes.svg?branch=master)](https://travis-ci.org/CamDavidsonPilon/lifetimes)
-[![Coverage Status](https://coveralls.io/repos/CamDavidsonPilon/lifetimes/badge.svg?branch=master)](https://coveralls.io/r/CamDavidsonPilon/lifetimes?branch=master)
+[![Coverage Status](https://coveralls.io/repos/CamDavidsonPilon/lifetimes_custom/badge.svg?branch=master)](https://coveralls.io/r/CamDavidsonPilon/lifetimes?branch=master)
 
 
 
@@ -48,7 +48,7 @@ pip install lifetimes
 
 ## Contributing
 
-Please refer to the [Contributing Guide](https://github.com/CamDavidsonPilon/lifetimes/blob/master/CONTRIBUTING.md) before creating any *Pull Requests*. It will make life easier for everyone.
+Please refer to the [Contributing Guide](https://github.com/CamDavidsonPilon/lifetimes_custom/blob/master/CONTRIBUTING.md) before creating any *Pull Requests*. It will make life easier for everyone.
 
 ## Documentation and tutorials
 [Official documentation](http://lifetimes.readthedocs.io/en/latest/)

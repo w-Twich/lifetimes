@@ -14,7 +14,7 @@ A "good" contribution would follow this flow:
 
 Most topics on this library are far from trivial, newcomers might misunderstand some concepts and, thus, if they blindly try to create *Pull Request*, their efforts might be for naught.
 
-Therefore, post your question on the [Issues Section](https://github.com/CamDavidsonPilon/lifetimes/issues) of the library first. It will be quickly (hopefully) labeled and other people's collaboration will provide enough feedback for you to know what to do next.
+Therefore, post your question on the [Issues Section](https://github.com/CamDavidsonPilon/lifetimes_custom/issues) of the library first. It will be quickly (hopefully) labeled and other people's collaboration will provide enough feedback for you to know what to do next.
 
 ## Prove that What You've Created is Better than What Already Exists (or not)
 
